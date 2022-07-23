@@ -18,16 +18,15 @@ describe("Ship:", () => {
       isSunk: expect.any(Function),
     });
   });
-  test("should have a hit() func", () => {
+  test("hit() should be marked in the ship object", () => {
     let boat = new Ship(5);
     boat.hit(1);
     expect(boat.length).toContain("x");
   });
-  test("should sunk if all positions is hit", () => {
+  test("should sunk if all positions are hit", () => {
     let boat = new Ship(2);
     boat.hit(1);
     boat.hit(2);
-    boat.isSunk();
     expect(boat.sunk).toBe(true);
   });
 });
@@ -51,14 +50,14 @@ describe("Gameboard:", () => {
     let ship = new Ship(2);
     playboard.putShip(1, 1, ship, "v");
     expect(playboard.board).toEqual([
-      { x: 1, y: 1, ship: ship, shipPart: 1 },
-      { x: 1, y: 2, ship: ship, shipPart: 2 },
+      { x: 1, y: 1, ship: ship, shipPart: 1, marked: true },
+      { x: 1, y: 2, marked: true },
       { x: 1, y: 3 },
-      { x: 2, y: 1 },
-      { x: 2, y: 2 },
+      { x: 2, y: 1, ship: ship, shipPart: 2, marked: true },
+      { x: 2, y: 2, marked: true },
       { x: 2, y: 3 },
-      { x: 3, y: 1 },
-      { x: 3, y: 2 },
+      { x: 3, y: 1, marked: true },
+      { x: 3, y: 2, marked: true },
       { x: 3, y: 3 },
     ]);
   });
@@ -67,16 +66,32 @@ describe("Gameboard:", () => {
     let ship = new Ship(2);
     playboard.putShip(1, 1, ship, "h");
     expect(playboard.board).toEqual([
-      { x: 1, y: 1, ship: ship, shipPart: 1 },
-      { x: 1, y: 2 },
-      { x: 1, y: 3 },
-      { x: 2, y: 1, ship: ship, shipPart: 2 },
-      { x: 2, y: 2 },
-      { x: 2, y: 3 },
+      { x: 1, y: 1, ship: ship, shipPart: 1, marked: true },
+      { x: 1, y: 2, ship: ship, shipPart: 2, marked: true },
+      { x: 1, y: 3, marked: true },
+      { x: 2, y: 1, marked: true },
+      { x: 2, y: 2, marked: true },
+      { x: 2, y: 3, marked: true },
       { x: 3, y: 1 },
       { x: 3, y: 2 },
       { x: 3, y: 3 },
     ]);
+  });
+  test("should cannot put ship in the marked place", () => {
+    let playboard = new Gameboard(3);
+    let smallShip = new Ship(1);
+    let bigShip = new Ship(2);
+    playboard.putShip(1, 1, smallShip, "v");
+    expect(() => playboard.putShip(2, 2, bigShip, "h")).toThrow(
+      "cannot be placed near the another ship"
+    );
+  });
+  test("should cannot put ship outside the playfield", () => {
+    let playboard = new Gameboard(3);
+    let bigShip = new Ship(2);
+    expect(() => playboard.putShip(3, 3, bigShip, "h")).toThrow(
+      "cannot be placed outside the field"
+    );
   });
   test("should be able to recieve miss attack", () => {
     let playboard = new Gameboard(2);
@@ -98,6 +113,7 @@ describe("Gameboard:", () => {
       ship: ship,
       shipPart: 1,
       attacked: true,
+      marked: true,
     });
     expect(ship.length).toEqual(["x"]);
     expect(ship.sunk).toBe(true);
@@ -107,7 +123,7 @@ describe("Gameboard:", () => {
     let smallShip = new Ship(1);
     let bigShip = new Ship(2);
     playboard.putShip(1, 1, smallShip, "v");
-    playboard.putShip(3, 2, bigShip, "v");
+    playboard.putShip(3, 2, bigShip, "h");
     playboard.recieveAttack(1, 1);
     playboard.recieveAttack(3, 2);
     playboard.recieveAttack(3, 3);
