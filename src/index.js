@@ -94,16 +94,16 @@ class Gameboard {
     }
   }
   recieveAttack(x, y) {
+    let cellIndex = this.board.findIndex(
+      (item) => item.x === x && item.y === y
+    );
+    if (this.board[cellIndex].attacked) {
+      throw new Error("cannot attack in the same cell");
+    }
     if (this.board.find((item) => item.x === x && item.y === y).ship) {
-      let cellIndex = this.board.findIndex(
-        (item) => item.x === x && item.y === y
-      );
       this.board[cellIndex].attacked = true;
       this.board[cellIndex].ship.hit(this.board[cellIndex].shipPart);
     } else {
-      let cellIndex = this.board.findIndex(
-        (item) => item.x === x && item.y === y
-      );
       this.board[cellIndex].attacked = true;
     }
     this.checkGameOver();

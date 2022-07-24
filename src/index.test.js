@@ -118,6 +118,13 @@ describe("Gameboard:", () => {
     expect(ship.length).toEqual(["x"]);
     expect(ship.sunk).toBe(true);
   });
+  test("should cannot recieve attack in the same place", () => {
+    let playboard = new Gameboard(2);
+    playboard.recieveAttack(1, 2);
+    expect(() => playboard.recieveAttack(1, 2)).toThrow(
+      "cannot attack in the same cell"
+    );
+  });
   test("should finish the game after all ships are sunk", () => {
     let playboard = new Gameboard(3);
     let smallShip = new Ship(1);
