@@ -20,6 +20,7 @@ class Player {
     this.gameboard = new Gameboard(10);
   }
   putRandomly() {
+    this.gameboard = new Gameboard(10);
     this.ships.forEach((ship) => {
       let directions = ["v", "h"];
       let randomIndex = () => {
@@ -74,6 +75,13 @@ class Player {
   }
   attackEnemy(enemy, x, y) {
     enemy.gameboard.recieveAttack(x, y);
+  }
+  createNewShips() {
+    let newShips = [];
+    for (let i = 0; i < this.ships.length; i++) {
+      newShips.push(new Ship(this.ships[i].length.length, this.ships[i].name));
+    }
+    this.ships = newShips;
   }
 }
 
