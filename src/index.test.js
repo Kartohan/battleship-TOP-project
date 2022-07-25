@@ -1,4 +1,6 @@
-const { Ship, Gameboard, Player } = require("./index");
+const Ship = require("./ship");
+const Gameboard = require("./gameboard");
+const Player = require("./player");
 
 describe("Ship:", () => {
   test("should be instance of Ship ", () => {
