@@ -20,6 +20,7 @@ randomButton.innerText = "Randomize";
 startButton.innerText = "Start Game";
 restartButton.innerText = "Restart Game";
 message.innerText = "Place ships!";
+message.style.color = "Blue";
 
 gameBoard.classList.add("gameboard");
 playboardPlayerOne.classList.add("playboard");
@@ -56,6 +57,7 @@ startButton.addEventListener("click", (e) => {
     isGameStarted = true;
   } else {
     message.innerText = "Place all ships into the field";
+    message.style.color = "blue";
   }
 });
 
@@ -64,6 +66,7 @@ restartButton.addEventListener("click", (e) => {
   startButton.style.display = "inline-block";
   restartButton.style.display = "none";
   message.innerText = "Place ships!";
+  message.style.color = "blue";
   isGameStarted = false;
   game.playerOne.gameboard.isGameOver = false;
   game.playerAI.gameboard.isGameOver = false;
@@ -76,14 +79,21 @@ restartButton.addEventListener("click", (e) => {
 });
 
 playboardPlayerAI.addEventListener("click", (e) => {
+  if (e.target.className === "playboard") {
+    message.innerText = "Choose cell correctly";
+    message.style.color = "red";
+    return;
+  }
   if (isGameStarted === false) {
     return;
   }
   if (game.playerOne.gameboard.isGameOver === true) {
     message.innerText = "Computer Wins!";
+    message.style.color = "red";
     return;
   } else if (game.playerAI.gameboard.isGameOver === true) {
     message.innerText = "Player Wins!";
+    message.style.color = "green";
     return;
   }
   try {
@@ -96,14 +106,17 @@ playboardPlayerAI.addEventListener("click", (e) => {
     message.innerText = "";
   } catch (e) {
     message.innerText = e;
+    message.style.color = "red";
   }
   game.renderPlayer(playboardPlayerOne);
   game.renderComputer(playboardPlayerAI);
   if (game.playerOne.gameboard.isGameOver === true) {
     message.innerText = "Computer Wins!";
+    message.style.color = "red";
     return;
   } else if (game.playerAI.gameboard.isGameOver === true) {
     message.innerText = "Player Wins!";
+    message.style.color = "green";
     return;
   }
 });

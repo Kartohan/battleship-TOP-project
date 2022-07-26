@@ -74,7 +74,7 @@ class Gameboard {
       (item) => item.x === x && item.y === y
     );
     if (this.board[cellIndex].attacked) {
-      throw new Error("cannot attack in the already attacked cell");
+      throw new Error("Cannot attack in the already attacked cell");
     }
     if (this.board.find((item) => item.x === x && item.y === y).ship) {
       this.board[cellIndex].attacked = true;

@@ -124,7 +124,7 @@ describe("Gameboard:", () => {
     let playboard = new Gameboard(2);
     playboard.recieveAttack(1, 2);
     expect(() => playboard.recieveAttack(1, 2)).toThrow(
-      "cannot attack in the already attacked cell"
+      "Cannot attack in the already attacked cell"
     );
   });
   test("should mark 'attacked' around the ship when it sunk", () => {
@@ -133,13 +133,13 @@ describe("Gameboard:", () => {
     playboard.putShip(1, 1, ship, "v");
     playboard.recieveAttack(1, 1);
     expect(() => playboard.recieveAttack(1, 2)).toThrow(
-      "cannot attack in the already attacked cell"
+      "Cannot attack in the already attacked cell"
     );
     expect(() => playboard.recieveAttack(2, 2)).toThrow(
-      "cannot attack in the already attacked cell"
+      "Cannot attack in the already attacked cell"
     );
     expect(() => playboard.recieveAttack(2, 1)).toThrow(
-      "cannot attack in the already attacked cell"
+      "Cannot attack in the already attacked cell"
     );
   });
   test('should mark "attacked" in the diagonal cell', () => {
@@ -148,7 +148,7 @@ describe("Gameboard:", () => {
     playboard.putShip(1, 1, ship, "v");
     playboard.recieveAttack(1, 1);
     expect(() => playboard.recieveAttack(2, 2)).toThrow(
-      "cannot attack in the already attacked cell"
+      "Cannot attack in the already attacked cell"
     );
     expect();
   });
