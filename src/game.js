@@ -52,6 +52,23 @@ class Game {
     });
   }
 
+  renderShips() {
+    const port = document.createElement("div");
+    port.classList.add("port");
+    this.playerOne.ships.forEach((ship) => {
+      const shipEl = document.createElement("div");
+      shipEl.classList.add("ship-body");
+      shipEl.setAttribute("draggable", "true");
+      ship.length.forEach((part) => {
+        const shipPart = document.createElement("div");
+        shipPart.classList.add("ship-part");
+        shipEl.append(shipPart);
+      });
+      port.append(shipEl);
+    });
+    return port;
+  }
+
   gameAuto() {
     this.playerOne.putRandomly();
     this.playerAI.putRandomly();

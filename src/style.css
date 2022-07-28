@@ -23,3 +23,22 @@
   display: flex;
   gap: 50px;
 }
+
+.port {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: row;
+  gap: 25px;
+}
+
+.ship-part {
+  display: flex;
+  height: 40px;
+  width: 40px;
+  border: 1px solid blue;
+}
+
+.ship-body {
+  display: flex;
+  flex-direction: column;
+}

@@ -28,7 +28,6 @@ playboardPlayerAI.classList.add("playboard");
 restartButton.style.display = "none";
 
 game.renderPlayer(playboardPlayerOne);
-game.renderComputer(playboardPlayerAI);
 
 randomButton.addEventListener("click", (e) => {
   game.playerOne.putRandomly();
@@ -122,4 +121,11 @@ playboardPlayerAI.addEventListener("click", (e) => {
 });
 
 gameBoard.append(playboardPlayerOne, playboardPlayerAI);
-body.append(gameBoard, randomButton, startButton, restartButton, message);
+body.append(
+  gameBoard,
+  game.renderShips(),
+  randomButton,
+  startButton,
+  restartButton,
+  message
+);
