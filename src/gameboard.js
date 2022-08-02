@@ -1,3 +1,5 @@
+const Ship = require("./ship");
+
 class Gameboard {
   constructor(boardSize) {
     this.board = (() => {
@@ -7,6 +9,7 @@ class Gameboard {
           let coords = {
             x: i,
             y: j,
+            marked: [],
           };
           board.push(coords);
         }
@@ -16,50 +19,95 @@ class Gameboard {
     this.size = boardSize;
     this.isGameOver = false;
   }
-  putShip(x, y, ship, direction) {
+
+  checkPutShip(x, y, ship, direction) {
+    let checks = [];
     if (direction === "h") {
-      let j = 0;
       for (let i = y; i < ship.length.length + y; i++) {
         let checkCell = this.board.find((item) => item.x === x && item.y === i);
         if (checkCell == undefined) {
-          throw new Error("cannot be placed outside the field");
+          checks.push(false);
+        } else if (checkCell.marked.includes(true)) {
+          checks.push(false);
+        } else {
+          checks.push(true);
         }
-        if (checkCell.marked) {
-          throw new Error("cannot be placed near the another ship");
-        }
-      }
-      for (let i = y; i < ship.length.length + y; i++) {
-        let cell = this.board.find((item) => item.x === x && item.y === i);
-        let index = this.board.findIndex(
-          (item) => item.x === x && item.y === i
-        );
-        cell.ship = ship;
-        cell.shipPart = ship.length[j];
-        this.board[index] = cell;
-        this.makeMarked(x, i, "marked");
-        j++;
       }
     } else if (direction === "v") {
-      let j = 0;
       for (let i = x; i < ship.length.length + x; i++) {
         let checkCell = this.board.find((item) => item.x === i && item.y === y);
         if (checkCell == undefined) {
-          throw new Error("cannot be placed outside the field");
-        }
-        if (checkCell.marked) {
-          throw new Error("cannot be placed near the another ship");
+          checks.push(false);
+        } else if (checkCell.marked.includes(true)) {
+          checks.push(false);
+        } else {
+          checks.push(true);
         }
       }
-      for (let i = x; i < ship.length.length + x; i++) {
-        let cell = this.board.find((item) => item.x === i && item.y === y);
-        let index = this.board.findIndex(
-          (item) => item.x === i && item.y === y
-        );
-        cell.ship = ship;
-        cell.shipPart = ship.length[j];
-        this.board[index] = cell;
-        this.makeMarked(i, y, "marked");
-        j++;
+    }
+    if (checks.find((item) => item === false) === false) {
+      return "Cannot place there";
+    } else if (checks.every((item) => item === true)) {
+      return "OK";
+    }
+  }
+
+  removeShip(x, y) {
+    let cell = this.board.find((item) => item.x === x && item.y === y);
+    if (cell.ship == undefined) {
+      return "There is no ship";
+    }
+    let shipCells = this.board.filter((item) => {
+      if (item.ship == undefined) {
+        return;
+      } else {
+        return item.ship.name === cell.ship.name;
+      }
+    });
+    shipCells.forEach((part) => {
+      let index = this.board.findIndex((i) => i.x === part.x && i.y === part.y);
+      this.board[index].ship = null;
+      this.board[index].shipPart = null;
+      this.makeMarked(part.x, part.y, "remove");
+    });
+  }
+
+  putShip(x, y, ship, direction) {
+    if (direction === "h") {
+      let j = 0;
+      let check = this.checkPutShip(x, y, ship, direction);
+      if (check === "OK") {
+        for (let i = y; i < ship.length.length + y; i++) {
+          let cell = this.board.find((item) => item.x === x && item.y === i);
+          let index = this.board.findIndex(
+            (item) => item.x === x && item.y === i
+          );
+          cell.ship = ship;
+          cell.shipPart = ship.length[j];
+          this.board[index] = cell;
+          this.makeMarked(x, i, "marked");
+          j++;
+        }
+      } else {
+        return check;
+      }
+    } else if (direction === "v") {
+      let j = 0;
+      let check = this.checkPutShip(x, y, ship, direction);
+      if (check === "OK") {
+        for (let i = x; i < ship.length.length + x; i++) {
+          let cell = this.board.find((item) => item.x === i && item.y === y);
+          let index = this.board.findIndex(
+            (item) => item.x === i && item.y === y
+          );
+          cell.ship = ship;
+          cell.shipPart = ship.length[j];
+          this.board[index] = cell;
+          this.makeMarked(i, y, "marked");
+          j++;
+        }
+      } else {
+        return check;
       }
     }
   }
@@ -140,9 +188,11 @@ class Gameboard {
         (item) => item.x === nextCell.x && item.y === nextCell.y
       );
       if (this.board[index] && mark === "marked") {
-        this.board[index].marked = true;
+        this.board[index].marked.push(true);
       } else if (this.board[index] && mark === "sunk") {
         this.board[index].attacked = true;
+      } else if (this.board[index] && mark === "remove") {
+        this.board[index].marked.pop();
       }
     });
     markedCoordsArrayWitoutZeros.forEach((item) => {

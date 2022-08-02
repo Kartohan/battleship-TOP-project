@@ -11,24 +11,62 @@
   flex-wrap: wrap;
 }
 .cell {
+  position: relative;
   display: flex;
-  justify-content: center;
-  align-items: center;
   height: 40px;
   width: 40px;
+  align-items: center;
+  justify-content: center;
   border: 1px solid black;
   font-size: 1.4em;
 }
 .gameboard {
   display: flex;
-  gap: 50px;
+  justify-content: center;
+  align-items: center;
+  gap: 150px;
 }
 
+.controls {
+  display: flex;
+  gap: 150px;
+  justify-content: center;
+  margin-top: 35px;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  gap: 475px;
+  padding: 25px;
+}
+
+.message {
+  text-align: center;
+  font-size: 1.4em;
+  padding: 10px;
+}
+
+.controls button {
+  padding: 25px;
+  font-size: 1.2em;
+  border: none;
+  border-radius: 10px;
+  transition: 0.3s;
+}
+.controls button:hover {
+  background-color: gray;
+}
+.title {
+  text-align: center;
+  padding: 25px;
+}
 .port {
   margin-top: 25px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 25px;
+  position: relative;
 }
 
 .ship-part {
@@ -39,6 +77,50 @@
 }
 
 .ship-body {
+  z-index: 1;
+  left: -1px;
+  top: -1px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  background-color: rgb(153, 198, 255);
+}
+
+.port-line {
+  display: flex;
+  flex-direction: row;
+  gap: 25px;
+}
+
+.ship-body .v:not(:first-child):not(:last-child) {
+  border-bottom: none;
+  border-top: none;
+}
+
+.ship-body .v:first-child {
+  border-bottom: none;
+}
+
+.ship-body .v:last-child {
+  border-top: none;
+}
+
+.vertical {
+  display: block;
+}
+
+.ship-body .h:not(:first-child):not(:last-child) {
+  border-right: none;
+  border-left: none;
+}
+
+.ship-body .h:first-child {
+  border-right: none;
+}
+
+.ship-body .h:last-child {
+  border-left: none;
+}
+
+.ship-body .h:only-child {
+  border: 1px solid blue;
 }

@@ -35,7 +35,7 @@ class Player {
             let checkCell = this.gameboard.board.find(
               (cell) => cell.x === i && cell.y === item.y
             );
-            if (checkCell == undefined || checkCell.marked) {
+            if (checkCell == undefined || checkCell.marked.includes(true)) {
               add = false;
             }
           }
@@ -48,7 +48,7 @@ class Player {
             let checkCell = this.gameboard.board.find(
               (cell) => cell.x === item.x && cell.y === i
             );
-            if (checkCell == undefined || checkCell.marked) {
+            if (checkCell == undefined || checkCell.marked.includes(true)) {
               add = false;
             }
           }

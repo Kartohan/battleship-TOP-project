@@ -41,10 +41,10 @@ describe("Gameboard:", () => {
   test("should create a board (2x2)", () => {
     let playboard = new Gameboard(2);
     expect(playboard.board).toEqual([
-      { x: 1, y: 1 },
-      { x: 1, y: 2 },
-      { x: 2, y: 1 },
-      { x: 2, y: 2 },
+      { x: 1, y: 1, marked: [] },
+      { x: 1, y: 2, marked: [] },
+      { x: 2, y: 1, marked: [] },
+      { x: 2, y: 2, marked: [] },
     ]);
   });
   test("should may be able to put the ship vertically", () => {
@@ -52,15 +52,15 @@ describe("Gameboard:", () => {
     let ship = new Ship(2, "Big");
     playboard.putShip(1, 1, ship, "v");
     expect(playboard.board).toEqual([
-      { x: 1, y: 1, ship: ship, shipPart: 1, marked: true },
-      { x: 1, y: 2, marked: true },
-      { x: 1, y: 3 },
-      { x: 2, y: 1, ship: ship, shipPart: 2, marked: true },
-      { x: 2, y: 2, marked: true },
-      { x: 2, y: 3 },
-      { x: 3, y: 1, marked: true },
-      { x: 3, y: 2, marked: true },
-      { x: 3, y: 3 },
+      { x: 1, y: 1, ship: ship, shipPart: 1, marked: [true, true] },
+      { x: 1, y: 2, marked: [true, true] },
+      { x: 1, y: 3, marked: [] },
+      { x: 2, y: 1, ship: ship, shipPart: 2, marked: [true, true] },
+      { x: 2, y: 2, marked: [true, true] },
+      { x: 2, y: 3, marked: [] },
+      { x: 3, y: 1, marked: [true] },
+      { x: 3, y: 2, marked: [true] },
+      { x: 3, y: 3, marked: [] },
     ]);
   });
   test("should may be able to put the ship horizintally", () => {
@@ -68,15 +68,15 @@ describe("Gameboard:", () => {
     let ship = new Ship(2, "Big");
     playboard.putShip(1, 1, ship, "h");
     expect(playboard.board).toEqual([
-      { x: 1, y: 1, ship: ship, shipPart: 1, marked: true },
-      { x: 1, y: 2, ship: ship, shipPart: 2, marked: true },
-      { x: 1, y: 3, marked: true },
-      { x: 2, y: 1, marked: true },
-      { x: 2, y: 2, marked: true },
-      { x: 2, y: 3, marked: true },
-      { x: 3, y: 1 },
-      { x: 3, y: 2 },
-      { x: 3, y: 3 },
+      { x: 1, y: 1, ship: ship, shipPart: 1, marked: [true, true] },
+      { x: 1, y: 2, ship: ship, shipPart: 2, marked: [true, true] },
+      { x: 1, y: 3, marked: [true] },
+      { x: 2, y: 1, marked: [true, true] },
+      { x: 2, y: 2, marked: [true, true] },
+      { x: 2, y: 3, marked: [true] },
+      { x: 3, y: 1, marked: [] },
+      { x: 3, y: 2, marked: [] },
+      { x: 3, y: 3, marked: [] },
     ]);
   });
   test("should cannot put ship in the marked place", () => {
@@ -84,16 +84,12 @@ describe("Gameboard:", () => {
     let smallShip = new Ship(1, "Small");
     let bigShip = new Ship(2, "Big");
     playboard.putShip(1, 1, smallShip, "v");
-    expect(() => playboard.putShip(2, 2, bigShip, "h")).toThrow(
-      "cannot be placed near the another ship"
-    );
+    expect(playboard.putShip(2, 2, bigShip, "h")).toEqual("Cannot place there");
   });
   test("should cannot put ship outside the playfield", () => {
     let playboard = new Gameboard(3);
     let bigShip = new Ship(2, "Big");
-    expect(() => playboard.putShip(3, 3, bigShip, "h")).toThrow(
-      "cannot be placed outside the field"
-    );
+    expect(playboard.putShip(3, 3, bigShip, "h")).toEqual("Cannot place there");
   });
   test("should be able to recieve miss attack", () => {
     let playboard = new Gameboard(2);
@@ -102,6 +98,7 @@ describe("Gameboard:", () => {
       x: 1,
       y: 2,
       attacked: true,
+      marked: [],
     });
   });
   test("should be able to recieve hit attack", () => {
@@ -115,7 +112,7 @@ describe("Gameboard:", () => {
       ship: ship,
       shipPart: 1,
       attacked: true,
-      marked: true,
+      marked: [true],
     });
     expect(ship.length).toEqual(["x"]);
     expect(ship.sunk).toBe(true);

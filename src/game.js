@@ -9,12 +9,15 @@ class Game {
 
   renderPlayer(obj) {
     obj.innerHTML = "";
+    let cellId = 1;
     this.playerOne.gameboard.board.forEach((item) => {
       let cell = document.createElement("div");
+      cell.dataset.id = cellId;
       cell.dataset.x = item.x;
       cell.dataset.y = item.y;
       cell.classList.add("cell");
       obj.append(cell);
+      cellId++;
       if (item.ship) {
         cell.style.border = "1px solid blue";
         cell.style.backgroundColor = "rgb(153 198 255)";
@@ -29,6 +32,30 @@ class Game {
         cell.innerText = "";
       }
     });
+    // const cells = document.querySelectorAll(".cell");
+    // cells.forEach((cell) => {
+    //   cell.addEventListener("dragover", (e) => {
+    //     const dragging = document.querySelector(".dragging");
+    //     const shipNow = this.playerOne.ships.find(
+    //       (item) => item.name === dragging.dataset.name
+    //     );
+    //     // console.log(shipNow);
+    //     let check = this.playerOne.gameboard.checkPutShip(
+    //       Number(e.target.dataset.x),
+    //       Number(e.target.dataset.y),
+    //       shipNow,
+    //       "h"
+    //     );
+    //     if (check === "OK") {
+    //       dragging.dataset.x = e.target.dataset.x;
+    //       dragging.dataset.y = e.target.dataset.y;
+    //     }
+    //     if (check === "Cannot place there") {
+    //       dragging.dataset.x = 1000;
+    //       dragging.dataset.y = 1000;
+    //     }
+    //   });
+    // });
   }
   renderComputer(obj) {
     obj.innerHTML = "";
@@ -55,17 +82,29 @@ class Game {
   renderShips() {
     const port = document.createElement("div");
     port.classList.add("port");
-    this.playerOne.ships.forEach((ship) => {
-      const shipEl = document.createElement("div");
-      shipEl.classList.add("ship-body");
-      shipEl.setAttribute("draggable", "true");
-      ship.length.forEach((part) => {
-        const shipPart = document.createElement("div");
-        shipPart.classList.add("ship-part");
-        shipEl.append(shipPart);
+    for (let i = 1; i <= 4; i++) {
+      const portLine = document.createElement("div");
+      portLine.classList.add("port-line");
+      let length = 5 - i;
+      let ships = this.playerOne.ships.filter(
+        (item) => item.length.length === length
+      );
+      ships.forEach((ship) => {
+        const shipEl = document.createElement("div");
+        shipEl.classList.add("ship-body");
+        shipEl.dataset.direction = "h";
+        shipEl.setAttribute("draggable", "true");
+        shipEl.dataset.name = ship.name;
+        ship.length.forEach((part) => {
+          const shipPart = document.createElement("div");
+          shipPart.classList.add("ship-part");
+          shipPart.classList.add("h");
+          shipEl.append(shipPart);
+        });
+        portLine.append(shipEl);
       });
-      port.append(shipEl);
-    });
+      port.append(portLine);
+    }
     return port;
   }
 
